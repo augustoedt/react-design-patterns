@@ -198,7 +198,42 @@ function App() {
 
 ### List Component
 
-Example of two components, a large and a small one
+Example of two components, a large and a small one for the given example data.
+
+```ts
+const person: Person[] = [
+    {
+        name: "Tom",
+        age: 40,
+        hairColor: "blue",
+        hobbies: ["guittar", "piano"]
+    }
+    ...//...
+    {
+        name: "Jonh",
+        age: 40,
+        hairColor: "blue",
+        hobbies: ["cooking", "dance", "travel"]
+    }
+]
+const products: Products[] = [
+    {
+        name: "TV UHD 4K",
+        price: '$4000',
+        description: "Modern Smart TV",
+        rating: 4.8
+    }
+    ...//...
+    {
+        name: "Nike Shots",
+        price: '$300',
+        description: "Space shoes",
+        rating: 4.3
+    }
+]
+```
+
+Components for person item
 
 ```tsx
 // SmallPersonListItem.tsx
@@ -227,6 +262,33 @@ export const LargePersonListItem = ({ person }: { person: Person }) => {
 };
 ```
 
+Components for product item
+
+```tsx
+// SmallProductListItem.tsx
+export const SmallProductListItem = ({ product }: { product: Product }) => {
+  const { name, price };
+  return (
+    <h3>
+      {name}-{price}
+    </h3>
+  );
+};
+// LargeProductListItem.tsx
+export const LargeProductListItem = ({ product }: { product: Product }) => {
+  const { name, price, description, rating };
+  return (
+    <>
+      <h3>{name}</h3>
+      <p>{price}</p>
+      <h3>Description:</h3>
+      <p>{description}</p>
+      <p>Average rating: {rating}</p>
+    </p>
+  );
+};
+```
+
 Now create a single list component
 
 ```tsx
@@ -243,7 +305,35 @@ export const RegularList = ({
   return (
     <>
       {items.map((item, i) => {
+        // resourceName specifies the property name of the
+        // itemComponent that receives a unique item of a list.
         <ItemComponent key={i} {...{[resourceName: string]: item}} />;
+      })}
+    </>
+  );
+};
+```
+
+```tsx
+// NumberedList.tsx
+export const NumberedList = ({
+  items,
+  resourceName,
+  itemComponent,
+}: {
+  items;
+  resourceName;
+  itemComponent: ItemComponent;
+}) => {
+  return (
+    <>
+      {items.map((item, i) => {
+        <>
+            <h3>{i+1}</h3>
+            // resourceName specifies the property name of the
+            // itemComponent that receives a unique item of a list.
+            <ItemComponent key={i} {...{[resourceName: string]: item}} />;
+        </>
       })}
     </>
   );
@@ -262,12 +352,76 @@ function App() {
         resourceName="person"
         itemComponent={SmallPersonListItem}
       />
-      <RegularList
+      <NumberedList
         items={people}
         resourceName="person"
         itemComponent={LargePersonListItem}
       />
+      <RegularList
+        items={people}
+        resourceName="product"
+        itemComponent={SmallProductListItem}
+      />
+      <NumberedList
+        items={people}
+        resourceName="product"
+        itemComponent={LargeProductListItem}
+      />
     </>
   );
 }
+```
+
+### Modal Components
+
+```tsx
+import styled from "styled-components";
+
+const ModalBackground = styled.div`
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%
+    height: 100%
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5)
+`;
+
+const ModalBody = styled.div`
+  background-color: white;
+  margin: 10% auto;
+  padding: 20px;
+  width: 50%;
+`;
+
+export const Modal = ({ children }) => {
+  const [shouldShow, setShouldShow] = useState(false);
+
+  return (
+    <>
+      <button onClick={() => setShouldShow(!shouldShow)}>Show</button>
+      {shouldShow && (
+        <ModalBackground onClick={() => setShouldShow(false)}>
+          <ModalBody onClick={(e) => e.stopPropagation()}>
+            <button onClick={() => setShouldShow(false)}>Hide</button>
+            {children}
+          </ModalBody>
+        </ModalBackground>
+      )}
+    </>
+  );
+};
+```
+
+Simple Implementation
+
+```tsx
+// App.tsx
+function App() {
+  return <>
+    <Modal>
+        <LargeProductListItem product={product[0]}>
+    </Modal>
+  </>
 ```
