@@ -1,4 +1,4 @@
-# A study of react patterns from youtube channel
+# A study of react patterns
 
 [Playlist Coding With Mr.M](https://www.youtube.com/watch?v=Luw90ESdSwI&list=PLgeETUaEEds5HE2uGWezJxYeZwpBonHr-)
 
