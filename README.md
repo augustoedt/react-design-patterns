@@ -425,3 +425,103 @@ function App() {
     </Modal>
   </>
 ```
+
+## Controlled vs. Uncontrolled Components
+
+### Uncontrolled components
+
+Components that keep track of their own states and release data only when some event occurs.
+
+### Controlled components
+
+Controlled components do not keep track of their own state, all state its passed is as props (that is, when we useState Hook with text inputs)
+
+### Basic Example
+
+```tsx
+// controlled components
+const MyComponent = ({data, changeData, onSubmit}) => {
+  return ...;
+}
+
+<MyComponent
+data={...}
+changeData={()=> ...}
+onSubmit={()=> ...}/>
+```
+
+### Uncontrolled Form
+
+It doest matter which value has the input until the event its done.
+
+```tsx
+import { createRef } from "react";
+
+export const UncontrolledForm = () => {
+  const nameInput = createRef();
+  const ageInput = createRef();
+  const hairColorInput = createRef();
+
+  const handleSubmit = () => {
+    console.log(nameInput.current.value);
+    console.log(ageInput.current.value);
+    console.log(hairColorInput.current.value);
+    e.preventDefault();
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input name="name" type="text" placeholder="Name" ref={nameInput} />
+      <input name="age" type="text" placeholder="Age" ref={ageInput} />
+      <input
+        name="hairColor"
+        type="text"
+        placeholder="Hair Color"
+        ref={hairColorInput}
+      />
+      <input type="submit" value="Submit" type="text" placeholder="Submit" />
+    </form>
+  );
+};
+```
+
+### Controlled Form
+
+```tsx
+import { createRef } from "react";
+
+export const UncontrolledForm = () => {
+  const [nameInputError, setNameInputError] = useState()
+  const [name setName] = useState();
+  const [age setAge] = useState();
+  const [hairColor setHairColor] = useState();
+
+  const handleSubmit = () => {
+    e.preventDefault();
+  };
+
+  useEffect(()=>{
+    if(name.length<2){
+      setNameInputError('Name must be two of more characters')
+    }
+    else {
+      setNameInputError()
+    }
+  },[])
+
+  return (
+    <form onSubmit={handleSubmit}>
+     {nameInputError && <p>{setNameInputError}</p>}
+      <input name="name" type="text" placeholder="Name" onChange={(e)=>setName(e.target.value)} value={name}/>
+      <input name="age" type="text" placeholder="Age" onChange={(e)=>setAge(e.target.value)} value={age} />
+      <input
+        name="hairColor"
+        type="text"
+        placeholder="Hair Color"
+        onChange={(e)=>setHairColor(e.target.value)} value={hairColor}
+      />
+      <input type="submit" value="Submit" type="text" placeholder="Submit" />
+    </form>
+  );
+};
+```
