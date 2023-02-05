@@ -490,7 +490,7 @@ export const UncontrolledForm = () => {
 ```tsx
 import { createRef } from "react";
 
-export const UncontrolledForm = () => {
+export const ControlledForm = () => {
   const [nameInputError, setNameInputError] = useState()
   const [name setName] = useState();
   const [age setAge] = useState();
